@@ -13,15 +13,12 @@ members = [
   "ext/broadcast_channel",
   "ext/console",
   "ext/crypto",
-  "ext/fetch",
   "ext/ffi",
-  "ext/http",
   "ext/net",
   "ext/url",
   "ext/web",
   "ext/webgpu",
   "ext/webidl",
-  "ext/websocket",
   "ext/webstorage",
 ]
 exclude = ["test_util/std/hash/_wasm"]
@@ -83,10 +80,6 @@ opt-level = 3
 opt-level = 3
 [profile.bench.package.futures-util]
 opt-level = 3
-[profile.bench.package.hyper]
-opt-level = 3
-[profile.bench.package.tokio]
-opt-level = 3
 [profile.bench.package.zstd]
 opt-level = 3
 [profile.bench.package.lzzzz]
@@ -130,10 +123,6 @@ opt-level = 3
 [profile.release.package.bytes]
 opt-level = 3
 [profile.release.package.futures-util]
-opt-level = 3
-[profile.release.package.hyper]
-opt-level = 3
-[profile.release.package.tokio]
 opt-level = 3
 [profile.release.package.zstd]
 opt-level = 3

@@ -5,7 +5,6 @@ This crate implements networking APIs.
 This crate depends on following extensions:
 
 - "deno_web"
-- "deno_fetch"
 
 Following ops are provided:
 

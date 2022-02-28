@@ -1310,16 +1310,6 @@ impl deno_net::NetPermissions for Permissions {
   }
 }
 
-impl deno_fetch::FetchPermissions for Permissions {
-  fn check_net_url(&mut self, url: &url::Url) -> Result<(), AnyError> {
-    self.net.check_url(url)
-  }
-
-  fn check_read(&mut self, path: &Path) -> Result<(), AnyError> {
-    self.read.check(path)
-  }
-}
-
 impl deno_web::TimersPermission for Permissions {
   fn allow_hrtime(&mut self) -> bool {
     self.hrtime.check().is_ok()
@@ -1327,12 +1317,6 @@ impl deno_web::TimersPermission for Permissions {
 
   fn check_unstable(&self, state: &OpState, api_name: &'static str) {
     crate::ops::check_unstable(state, api_name);
-  }
-}
-
-impl deno_websocket::WebSocketPermissions for Permissions {
-  fn check_net_url(&mut self, url: &url::Url) -> Result<(), AnyError> {
-    self.net.check_url(url)
   }
 }
 

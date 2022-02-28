@@ -47,7 +47,6 @@ async fn main() -> Result<(), AnyError> {
     js_error_create_fn: None,
     web_worker_preload_module_cb,
     create_web_worker_cb,
-    maybe_inspector_server: None,
     should_break_on_first_statement: false,
     module_loader,
     get_error_class_fn: Some(&get_error_class_name),

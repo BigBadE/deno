@@ -2,7 +2,6 @@
 
 use crate::itest;
 use deno_core::url;
-use deno_runtime::deno_fetch::reqwest;
 use deno_runtime::deno_net::ops_tls::TlsStream;
 use deno_runtime::deno_tls::rustls;
 use deno_runtime::deno_tls::rustls_pemfile;
@@ -68,8 +67,6 @@ mod eval;
 mod fmt;
 #[path = "info_tests.rs"]
 mod info;
-#[path = "inspector_tests.rs"]
-mod inspector;
 #[path = "install_tests.rs"]
 mod install;
 #[path = "lint_tests.rs"]
@@ -702,74 +699,6 @@ fn websocketstream() {
   assert!(status.success());
 }
 
-#[test]
-fn websocket_server_multi_field_connection_header() {
-  let script = util::testdata_path()
-    .join("websocket_server_multi_field_connection_header_test.ts");
-  let root_ca = util::testdata_path().join("tls/RootCA.pem");
-  let mut child = util::deno_cmd()
-    .arg("run")
-    .arg("--unstable")
-    .arg("--allow-net")
-    .arg("--cert")
-    .arg(root_ca)
-    .arg(script)
-    .stdout(std::process::Stdio::piped())
-    .spawn()
-    .unwrap();
-
-  let stdout = child.stdout.as_mut().unwrap();
-  let mut buffer = [0; 5];
-  let read = stdout.read(&mut buffer).unwrap();
-  assert_eq!(read, 5);
-  let msg = std::str::from_utf8(&buffer).unwrap();
-  assert_eq!(msg, "READY");
-
-  let req = http::request::Builder::new()
-    .header(http::header::CONNECTION, "keep-alive, Upgrade")
-    .uri("ws://localhost:4319")
-    .body(())
-    .unwrap();
-  assert!(
-    deno_runtime::deno_websocket::tokio_tungstenite::tungstenite::connect(req)
-      .is_ok()
-  );
-  assert!(child.wait().unwrap().success());
-}
-
-#[test]
-fn websocket_server_idletimeout() {
-  let script = util::testdata_path().join("websocket_server_idletimeout.ts");
-  let root_ca = util::testdata_path().join("tls/RootCA.pem");
-  let mut child = util::deno_cmd()
-    .arg("test")
-    .arg("--unstable")
-    .arg("--allow-net")
-    .arg("--cert")
-    .arg(root_ca)
-    .arg(script)
-    .stdout(std::process::Stdio::piped())
-    .spawn()
-    .unwrap();
-
-  let stdout = child.stdout.as_mut().unwrap();
-  let mut buffer = [0; 5];
-  let read = stdout.read(&mut buffer).unwrap();
-  assert_eq!(read, 5);
-  let msg = std::str::from_utf8(&buffer).unwrap();
-  assert_eq!(msg, "READY");
-
-  let req = http::request::Builder::new()
-    .uri("ws://localhost:4509")
-    .body(())
-    .unwrap();
-  let (_ws, _request) =
-    deno_runtime::deno_websocket::tokio_tungstenite::tungstenite::connect(req)
-      .unwrap();
-
-  assert!(child.wait().unwrap().success());
-}
-
 #[cfg(not(windows))]
 #[test]
 fn set_raw_should_not_panic_on_no_tty() {
@@ -1309,54 +1238,6 @@ async fn listen_tls_alpn_fail() {
 
       let status = child.wait().unwrap();
       assert!(status.success());
-    })
-    .await;
-}
-
-#[tokio::test]
-async fn http2_request_url() {
-  // TLS streams require the presence of an ambient local task set to gracefully
-  // close dropped connections in the background.
-  LocalSet::new()
-    .run_until(async {
-      let mut child = util::deno_cmd()
-        .current_dir(util::testdata_path())
-        .arg("run")
-        .arg("--unstable")
-        .arg("--quiet")
-        .arg("--allow-net")
-        .arg("--allow-read")
-        .arg("./http2_request_url.ts")
-        .arg("4506")
-        .stdout(std::process::Stdio::piped())
-        .spawn()
-        .unwrap();
-      let stdout = child.stdout.as_mut().unwrap();
-      let mut buffer = [0; 5];
-      let read = stdout.read(&mut buffer).unwrap();
-      assert_eq!(read, 5);
-      let msg = std::str::from_utf8(&buffer).unwrap();
-      assert_eq!(msg, "READY");
-
-      let cert = reqwest::Certificate::from_pem(include_bytes!(
-        "../testdata/tls/RootCA.crt"
-      ))
-      .unwrap();
-
-      let client = reqwest::Client::builder()
-        .add_root_certificate(cert)
-        .http2_prior_knowledge()
-        .build()
-        .unwrap();
-
-      let res = client.get("http://127.0.0.1:4506").send().await.unwrap();
-      assert_eq!(200, res.status());
-
-      let body = res.text().await.unwrap();
-      assert_eq!(body, "http://127.0.0.1:4506/");
-
-      child.kill().unwrap();
-      child.wait().unwrap();
     })
     .await;
 }

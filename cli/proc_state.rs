@@ -21,7 +21,6 @@ use crate::lockfile::Lockfile;
 use crate::resolver::ImportMapResolver;
 use crate::resolver::JsxResolver;
 use crate::source_maps::SourceMapGetter;
-use crate::version;
 
 use deno_ast::MediaType;
 use deno_core::anyhow::anyhow;
@@ -47,7 +46,6 @@ use deno_graph::Resolved;
 use deno_runtime::deno_broadcast_channel::InMemoryBroadcastChannel;
 use deno_runtime::deno_tls::rustls::RootCertStore;
 use deno_runtime::deno_web::BlobStore;
-use deno_runtime::inspector_server::InspectorServer;
 use deno_runtime::permissions::Permissions;
 use import_map::parse_from_json;
 use import_map::ImportMap;
@@ -73,7 +71,6 @@ pub struct Inner {
   pub lockfile: Option<Arc<Mutex<Lockfile>>>,
   pub maybe_config_file: Option<ConfigFile>,
   pub maybe_import_map: Option<Arc<ImportMap>>,
-  pub maybe_inspector_server: Option<Arc<InspectorServer>>,
   pub root_cert_store: Option<RootCertStore>,
   pub blob_store: BlobStore,
   pub broadcast_channel: InMemoryBroadcastChannel,
@@ -173,11 +170,6 @@ impl ProcState {
         None
       };
 
-    let maybe_inspect_host = flags.inspect.or(flags.inspect_brk);
-    let maybe_inspector_server = maybe_inspect_host.map(|host| {
-      Arc::new(InspectorServer::new(host, version::get_user_agent()))
-    });
-
     let coverage_dir = flags
       .coverage_dir
       .clone()
@@ -217,7 +209,6 @@ impl ProcState {
       lockfile,
       maybe_config_file,
       maybe_import_map,
-      maybe_inspector_server,
       root_cert_store: Some(root_cert_store.clone()),
       blob_store,
       broadcast_channel,

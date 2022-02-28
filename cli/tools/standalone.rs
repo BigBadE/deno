@@ -14,7 +14,6 @@ use deno_core::error::AnyError;
 use deno_core::serde_json;
 use deno_core::url::Url;
 use deno_graph::ModuleSpecifier;
-use deno_runtime::deno_fetch::reqwest::Client;
 use deno_runtime::permissions::Permissions;
 use std::env;
 use std::fs::read;

@@ -81,9 +81,7 @@ fn create_compiler_snapshot(
   op_crate_libs.insert("deno.console", deno_console::get_declaration());
   op_crate_libs.insert("deno.url", deno_url::get_declaration());
   op_crate_libs.insert("deno.web", deno_web::get_declaration());
-  op_crate_libs.insert("deno.fetch", deno_fetch::get_declaration());
   op_crate_libs.insert("deno.webgpu", deno_webgpu_get_declaration());
-  op_crate_libs.insert("deno.websocket", deno_websocket::get_declaration());
   op_crate_libs.insert("deno.webstorage", deno_webstorage::get_declaration());
   op_crate_libs.insert("deno.crypto", deno_crypto::get_declaration());
   op_crate_libs.insert(
@@ -317,16 +315,8 @@ fn main() {
     deno_web::get_declaration().display()
   );
   println!(
-    "cargo:rustc-env=DENO_FETCH_LIB_PATH={}",
-    deno_fetch::get_declaration().display()
-  );
-  println!(
     "cargo:rustc-env=DENO_WEBGPU_LIB_PATH={}",
     deno_webgpu_get_declaration().display()
-  );
-  println!(
-    "cargo:rustc-env=DENO_WEBSOCKET_LIB_PATH={}",
-    deno_websocket::get_declaration().display()
   );
   println!(
     "cargo:rustc-env=DENO_WEBSTORAGE_LIB_PATH={}",

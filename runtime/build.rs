@@ -68,31 +68,6 @@ mod not_docs {
 
   struct Permissions;
 
-  impl deno_fetch::FetchPermissions for Permissions {
-    fn check_net_url(
-      &mut self,
-      _url: &deno_core::url::Url,
-    ) -> Result<(), deno_core::error::AnyError> {
-      unreachable!("snapshotting!")
-    }
-
-    fn check_read(
-      &mut self,
-      _p: &Path,
-    ) -> Result<(), deno_core::error::AnyError> {
-      unreachable!("snapshotting!")
-    }
-  }
-
-  impl deno_websocket::WebSocketPermissions for Permissions {
-    fn check_net_url(
-      &mut self,
-      _url: &deno_core::url::Url,
-    ) -> Result<(), deno_core::error::AnyError> {
-      unreachable!("snapshotting!")
-    }
-  }
-
   impl deno_web::TimersPermission for Permissions {
     fn allow_hrtime(&mut self) -> bool {
       unreachable!("snapshotting!")
@@ -149,8 +124,6 @@ mod not_docs {
         deno_web::BlobStore::default(),
         Default::default(),
       ),
-      deno_fetch::init::<Permissions>(Default::default()),
-      deno_websocket::init::<Permissions>("".to_owned(), None, None),
       deno_webstorage::init(None),
       deno_crypto::init(None),
       deno_webgpu::init(false),
@@ -163,7 +136,6 @@ mod not_docs {
         None, false, // No --unstable.
         None,
       ),
-      deno_http::init(),
     ];
 
     let js_runtime = JsRuntime::new(RuntimeOptions {

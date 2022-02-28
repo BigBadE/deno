@@ -1,6 +1,5 @@
 // Copyright 2018-2022 the Deno authors. All rights reserved. MIT license.
 
-use crate::inspector_server::InspectorServer;
 use crate::js;
 use crate::ops;
 use crate::permissions::Permissions;
@@ -55,7 +54,6 @@ pub struct WorkerOptions {
   pub create_web_worker_cb: Arc<ops::worker_host::CreateWebWorkerCb>,
   pub web_worker_preload_module_cb: Arc<ops::worker_host::PreloadModuleCb>,
   pub js_error_create_fn: Option<Rc<JsErrorCreateFn>>,
-  pub maybe_inspector_server: Option<Arc<InspectorServer>>,
   pub should_break_on_first_statement: bool,
   pub get_error_class_fn: Option<GetErrorClassFn>,
   pub origin_storage_dir: Option<std::path::PathBuf>,
@@ -104,21 +102,6 @@ impl MainWorker {
         options.blob_store.clone(),
         options.bootstrap.location.clone(),
       ),
-      deno_fetch::init::<Permissions>(deno_fetch::Options {
-        user_agent: options.user_agent.clone(),
-        root_cert_store: options.root_cert_store.clone(),
-        unsafely_ignore_certificate_errors: options
-          .unsafely_ignore_certificate_errors
-          .clone(),
-        file_fetch_handler: Rc::new(deno_fetch::FsFetchHandler),
-        ..Default::default()
-      }),
-      deno_websocket::init::<Permissions>(
-        options.user_agent.clone(),
-        options.root_cert_store.clone(),
-        options.unsafely_ignore_certificate_errors.clone(),
-      ),
-      deno_webstorage::init(options.origin_storage_dir.clone()),
       deno_crypto::init(options.seed),
       deno_broadcast_channel::init(options.broadcast_channel.clone(), unstable),
       deno_webgpu::init(unstable),
@@ -152,7 +135,7 @@ impl MainWorker {
     ];
     extensions.extend(std::mem::take(&mut options.extensions));
 
-    let mut js_runtime = JsRuntime::new(RuntimeOptions {
+    let js_runtime = JsRuntime::new(RuntimeOptions {
       module_loader: Some(options.module_loader.clone()),
       startup_snapshot: Some(js::deno_isolate_init()),
       js_error_create_fn: options.js_error_create_fn.clone(),
@@ -162,14 +145,6 @@ impl MainWorker {
       extensions,
       ..Default::default()
     });
-
-    if let Some(server) = options.maybe_inspector_server.clone() {
-      server.register_inspector(
-        main_module.to_string(),
-        &mut js_runtime,
-        options.should_break_on_first_statement,
-      );
-    }
 
     Self {
       js_runtime,
@@ -372,7 +347,6 @@ mod tests {
       js_error_create_fn: None,
       web_worker_preload_module_cb: Arc::new(|_| unreachable!()),
       create_web_worker_cb: Arc::new(|_| unreachable!()),
-      maybe_inspector_server: None,
       should_break_on_first_statement: false,
       module_loader: Rc::new(deno_core::FsModuleLoader),
       get_error_class_fn: None,

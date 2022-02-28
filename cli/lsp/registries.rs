@@ -527,7 +527,6 @@ impl ModuleRegistry {
       .fetch_with_accept(
         specifier,
         &mut Permissions::allow_all(),
-        Some("application/vnd.deno.reg.v2+json, application/vnd.deno.reg.v1+json;q=0.9, application/json;q=0.8"),
       )
       .await;
     // if there is an error fetching, we will cache an empty file, so that

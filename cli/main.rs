@@ -130,8 +130,6 @@ fn create_web_worker_callback(ps: ProcState) -> Arc<CreateWebWorkerCb> {
       PrettyJsError::create(source_mapped_error)
     });
 
-    let maybe_inspector_server = ps.maybe_inspector_server.clone();
-
     let module_loader = CliModuleLoader::new_for_worker(
       ps.clone(),
       args.parent_permissions.clone(),
@@ -174,7 +172,6 @@ fn create_web_worker_callback(ps: ProcState) -> Arc<CreateWebWorkerCb> {
       js_error_create_fn: Some(js_error_create_fn),
       use_deno_namespace: args.use_deno_namespace,
       worker_type: args.worker_type,
-      maybe_inspector_server,
       get_error_class_fn: Some(&crate::errors::get_error_class_name),
       blob_store: ps.blob_store.clone(),
       broadcast_channel: ps.broadcast_channel.clone(),
@@ -209,7 +206,6 @@ pub fn create_main_worker(
     PrettyJsError::create(source_mapped_error)
   });
 
-  let maybe_inspector_server = ps.maybe_inspector_server.clone();
   let should_break_on_first_statement = ps.flags.inspect_brk.is_some();
 
   let create_web_worker_cb = create_web_worker_callback(ps.clone());
@@ -271,7 +267,6 @@ pub fn create_main_worker(
     js_error_create_fn: Some(js_error_create_fn),
     create_web_worker_cb,
     web_worker_preload_module_cb,
-    maybe_inspector_server,
     should_break_on_first_statement,
     module_loader,
     get_error_class_fn: Some(&crate::errors::get_error_class_name),
@@ -376,9 +371,7 @@ pub fn get_types(unstable: bool) -> String {
     crate::tsc::DENO_CONSOLE_LIB,
     crate::tsc::DENO_URL_LIB,
     crate::tsc::DENO_WEB_LIB,
-    crate::tsc::DENO_FETCH_LIB,
     crate::tsc::DENO_WEBGPU_LIB,
-    crate::tsc::DENO_WEBSOCKET_LIB,
     crate::tsc::DENO_WEBSTORAGE_LIB,
     crate::tsc::DENO_CRYPTO_LIB,
     crate::tsc::DENO_BROADCAST_CHANNEL_LIB,

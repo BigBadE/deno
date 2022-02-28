@@ -1,6 +1,5 @@
 // Copyright 2018-2022 the Deno authors. All rights reserved. MIT license.
 use crate::colors;
-use crate::inspector_server::InspectorServer;
 use crate::js;
 use crate::ops;
 use crate::permissions::Permissions;
@@ -320,7 +319,6 @@ pub struct WebWorkerOptions {
   pub js_error_create_fn: Option<Rc<JsErrorCreateFn>>,
   pub use_deno_namespace: bool,
   pub worker_type: WebWorkerType,
-  pub maybe_inspector_server: Option<Arc<InspectorServer>>,
   pub get_error_class_fn: Option<GetErrorClassFn>,
   pub blob_store: BlobStore,
   pub broadcast_channel: InMemoryBroadcastChannel,
@@ -371,20 +369,6 @@ impl WebWorker {
       deno_web::init::<Permissions>(
         options.blob_store.clone(),
         Some(main_module.clone()),
-      ),
-      deno_fetch::init::<Permissions>(deno_fetch::Options {
-        user_agent: options.user_agent.clone(),
-        root_cert_store: options.root_cert_store.clone(),
-        unsafely_ignore_certificate_errors: options
-          .unsafely_ignore_certificate_errors
-          .clone(),
-        file_fetch_handler: Rc::new(deno_fetch::FsFetchHandler),
-        ..Default::default()
-      }),
-      deno_websocket::init::<Permissions>(
-        options.user_agent.clone(),
-        options.root_cert_store.clone(),
-        options.unsafely_ignore_certificate_errors.clone(),
       ),
       deno_broadcast_channel::init(options.broadcast_channel.clone(), unstable),
       deno_crypto::init(options.seed),
@@ -447,14 +431,6 @@ impl WebWorker {
       extensions,
       ..Default::default()
     });
-
-    if let Some(server) = options.maybe_inspector_server.clone() {
-      server.register_inspector(
-        main_module.to_string(),
-        &mut js_runtime,
-        false,
-      );
-    }
 
     let (internal_handle, external_handle) = {
       let handle = js_runtime.v8_isolate().thread_safe_handle();

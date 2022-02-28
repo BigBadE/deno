@@ -14,7 +14,6 @@ use std::process::Command;
 use std::process::Stdio;
 use std::time::SystemTime;
 
-mod http;
 mod lsp;
 
 fn read_json(filename: &str) -> Result<Value> {

@@ -48,19 +48,11 @@ opt-level = 3
 opt-level = 3
 [profile.bench.package.flate2]
 opt-level = 3
-[profile.bench.package.brotli]
-opt-level = 3
 [profile.bench.package.miniz_oxide]
-opt-level = 3
-[profile.bench.package.async-compression]
-opt-level = 3
-[profile.bench.package.brotli-decompressor]
 opt-level = 3
 [profile.bench.package.deno_core]
 opt-level = 3
 [profile.bench.package.deno_runtime]
-opt-level = 3
-[profile.bench.package.deno_http]
 opt-level = 3
 [profile.bench.package.deno_net]
 opt-level = 3
@@ -92,19 +84,11 @@ opt-level = 3
 opt-level = 3
 [profile.release.package.flate2]
 opt-level = 3
-[profile.release.package.brotli]
-opt-level = 3
 [profile.release.package.miniz_oxide]
-opt-level = 3
-[profile.release.package.async-compression]
-opt-level = 3
-[profile.release.package.brotli-decompressor]
 opt-level = 3
 [profile.release.package.deno_core]
 opt-level = 3
 [profile.release.package.deno_runtime]
-opt-level = 3
-[profile.release.package.deno_http]
 opt-level = 3
 [profile.release.package.deno_net]
 opt-level = 3

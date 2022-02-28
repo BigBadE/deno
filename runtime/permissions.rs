@@ -1293,23 +1293,6 @@ impl Permissions {
   }
 }
 
-impl deno_net::NetPermissions for Permissions {
-  fn check_net<T: AsRef<str>>(
-    &mut self,
-    host: &(T, Option<u16>),
-  ) -> Result<(), AnyError> {
-    self.net.check(host)
-  }
-
-  fn check_read(&mut self, path: &Path) -> Result<(), AnyError> {
-    self.read.check(path)
-  }
-
-  fn check_write(&mut self, path: &Path) -> Result<(), AnyError> {
-    self.write.check(path)
-  }
-}
-
 impl deno_web::TimersPermission for Permissions {
   fn allow_hrtime(&mut self) -> bool {
     self.hrtime.check().is_ok()
@@ -1317,12 +1300,6 @@ impl deno_web::TimersPermission for Permissions {
 
   fn check_unstable(&self, state: &OpState, api_name: &'static str) {
     crate::ops::check_unstable(state, api_name);
-  }
-}
-
-impl deno_ffi::FfiPermissions for Permissions {
-  fn check(&mut self, path: Option<&Path>) -> Result<(), AnyError> {
-    self.ffi.check(path)
   }
 }
 
@@ -1373,20 +1350,6 @@ pub fn resolve_write_allowlist(
     v.iter()
       .map(|raw_path| {
         WriteDescriptor(resolve_from_cwd(Path::new(&raw_path)).unwrap())
-      })
-      .collect()
-  } else {
-    HashSet::new()
-  }
-}
-
-pub fn resolve_ffi_allowlist(
-  allow: &Option<Vec<PathBuf>>,
-) -> HashSet<FfiDescriptor> {
-  if let Some(v) = allow {
-    v.iter()
-      .map(|raw_path| {
-        FfiDescriptor(resolve_from_cwd(Path::new(&raw_path)).unwrap())
       })
       .collect()
   } else {

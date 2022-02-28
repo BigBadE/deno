@@ -52,7 +52,6 @@ delete Object.prototype.__proto__;
   const webStorage = window.__bootstrap.webStorage;
   const broadcastChannel = window.__bootstrap.broadcastChannel;
   const file = window.__bootstrap.file;
-  const formData = window.__bootstrap.formData;
   const fetch = window.__bootstrap.fetch;
   const prompt = window.__bootstrap.prompt;
   const messagePort = window.__bootstrap.messagePort;
@@ -380,8 +379,6 @@ delete Object.prototype.__proto__;
     EventTarget: util.nonEnumerable(EventTarget),
     File: util.nonEnumerable(file.File),
     FileReader: util.nonEnumerable(fileReader.FileReader),
-    FormData: util.nonEnumerable(formData.FormData),
-    Headers: util.nonEnumerable(headers.Headers),
     MessageEvent: util.nonEnumerable(MessageEvent),
     Performance: util.nonEnumerable(performance.Performance),
     PerformanceEntry: util.nonEnumerable(performance.PerformanceEntry),
@@ -392,8 +389,6 @@ delete Object.prototype.__proto__;
     ReadableStreamDefaultReader: util.nonEnumerable(
       streams.ReadableStreamDefaultReader,
     ),
-    Request: util.nonEnumerable(fetch.Request),
-    Response: util.nonEnumerable(fetch.Response),
     TextDecoder: util.nonEnumerable(encoding.TextDecoder),
     TextEncoder: util.nonEnumerable(encoding.TextEncoder),
     TextDecoderStream: util.nonEnumerable(encoding.TextDecoderStream),
@@ -437,7 +432,6 @@ delete Object.prototype.__proto__;
     crypto: util.readOnly(crypto.crypto),
     Crypto: util.nonEnumerable(crypto.Crypto),
     SubtleCrypto: util.nonEnumerable(crypto.SubtleCrypto),
-    fetch: util.writable(fetch.fetch),
     performance: util.writable(performance.performance),
     setInterval: util.writable(timers.setInterval),
     setTimeout: util.writable(timers.setTimeout),

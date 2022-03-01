@@ -66,76 +66,11 @@ mod not_docs {
     println!("Snapshot written to: {} ", snapshot_path.display());
   }
 
-  struct Permissions;
-
-  impl deno_web::TimersPermission for Permissions {
-    fn allow_hrtime(&mut self) -> bool {
-      unreachable!("snapshotting!")
-    }
-
-    fn check_unstable(
-      &self,
-      _state: &deno_core::OpState,
-      _api_name: &'static str,
-    ) {
-      unreachable!("snapshotting!")
-    }
-  }
-
-  impl deno_ffi::FfiPermissions for Permissions {
-    fn check(
-      &mut self,
-      _path: Option<&Path>,
-    ) -> Result<(), deno_core::error::AnyError> {
-      unreachable!("snapshotting!")
-    }
-  }
-
-  impl deno_net::NetPermissions for Permissions {
-    fn check_net<T: AsRef<str>>(
-      &mut self,
-      _host: &(T, Option<u16>),
-    ) -> Result<(), deno_core::error::AnyError> {
-      unreachable!("snapshotting!")
-    }
-
-    fn check_read(
-      &mut self,
-      _p: &Path,
-    ) -> Result<(), deno_core::error::AnyError> {
-      unreachable!("snapshotting!")
-    }
-
-    fn check_write(
-      &mut self,
-      _p: &Path,
-    ) -> Result<(), deno_core::error::AnyError> {
-      unreachable!("snapshotting!")
-    }
-  }
-
   fn create_runtime_snapshot(snapshot_path: &Path, files: Vec<PathBuf>) {
     let extensions: Vec<Extension> = vec![
-      deno_webidl::init(),
       deno_console::init(),
-      deno_url::init(),
       deno_tls::init(),
-      deno_web::init::<Permissions>(
-        deno_web::BlobStore::default(),
-        Default::default(),
-      ),
-      deno_webstorage::init(None),
-      deno_crypto::init(None),
-      deno_webgpu::init(false),
-      deno_broadcast_channel::init(
-        deno_broadcast_channel::InMemoryBroadcastChannel::default(),
-        false, // No --unstable.
-      ),
-      deno_ffi::init::<Permissions>(false),
-      deno_net::init::<Permissions>(
-        None, false, // No --unstable.
-        None,
-      ),
+      deno_crypto::init(None)
     ];
 
     let js_runtime = JsRuntime::new(RuntimeOptions {

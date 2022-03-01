@@ -79,16 +79,7 @@ fn create_compiler_snapshot(
   // libs that are being provided by op crates.
   let mut op_crate_libs = HashMap::new();
   op_crate_libs.insert("deno.console", deno_console::get_declaration());
-  op_crate_libs.insert("deno.url", deno_url::get_declaration());
-  op_crate_libs.insert("deno.web", deno_web::get_declaration());
-  op_crate_libs.insert("deno.webgpu", deno_webgpu_get_declaration());
-  op_crate_libs.insert("deno.webstorage", deno_webstorage::get_declaration());
   op_crate_libs.insert("deno.crypto", deno_crypto::get_declaration());
-  op_crate_libs.insert(
-    "deno.broadcast_channel",
-    deno_broadcast_channel::get_declaration(),
-  );
-  op_crate_libs.insert("deno.net", deno_net::get_declaration());
 
   // ensure we invalidate the build properly.
   for (_, path) in op_crate_libs.iter() {
@@ -307,32 +298,8 @@ fn main() {
     deno_console::get_declaration().display()
   );
   println!(
-    "cargo:rustc-env=DENO_URL_LIB_PATH={}",
-    deno_url::get_declaration().display()
-  );
-  println!(
-    "cargo:rustc-env=DENO_WEB_LIB_PATH={}",
-    deno_web::get_declaration().display()
-  );
-  println!(
-    "cargo:rustc-env=DENO_WEBGPU_LIB_PATH={}",
-    deno_webgpu_get_declaration().display()
-  );
-  println!(
-    "cargo:rustc-env=DENO_WEBSTORAGE_LIB_PATH={}",
-    deno_webstorage::get_declaration().display()
-  );
-  println!(
     "cargo:rustc-env=DENO_CRYPTO_LIB_PATH={}",
     deno_crypto::get_declaration().display()
-  );
-  println!(
-    "cargo:rustc-env=DENO_BROADCAST_CHANNEL_LIB_PATH={}",
-    deno_broadcast_channel::get_declaration().display()
-  );
-  println!(
-    "cargo:rustc-env=DENO_NET_LIB_PATH={}",
-    deno_net::get_declaration().display()
   );
 
   println!("cargo:rustc-env=TARGET={}", env::var("TARGET").unwrap());
@@ -357,11 +324,6 @@ fn main() {
     ));
     res.compile().unwrap();
   }
-}
-
-fn deno_webgpu_get_declaration() -> PathBuf {
-  let manifest_dir = Path::new(env!("CARGO_MANIFEST_DIR"));
-  manifest_dir.join("dts").join("lib.deno_webgpu.d.ts")
 }
 
 fn get_js_files(d: &str) -> Vec<PathBuf> {

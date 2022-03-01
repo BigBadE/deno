@@ -7,10 +7,6 @@ authors = ["the Deno authors"]
 edition = "2021"
 publish = false
 
-[[bin]]
-name = "test_server"
-path = "src/test_server.rs"
-
 [dependencies]
 anyhow = "1.0.43"
 async-stream = "0.3.2"

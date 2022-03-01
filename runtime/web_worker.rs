@@ -362,20 +362,7 @@ impl WebWorker {
       .build();
 
     let mut extensions: Vec<Extension> = vec![
-      // Web APIs
-      deno_webidl::init(),
       deno_console::init(),
-      deno_url::init(),
-      deno_web::init::<Permissions>(
-        options.blob_store.clone(),
-        Some(main_module.clone()),
-      ),
-      deno_broadcast_channel::init(options.broadcast_channel.clone(), unstable),
-      deno_crypto::init(options.seed),
-      deno_webgpu::init(unstable),
-      // ffi
-      deno_ffi::init::<Permissions>(unstable),
-      // Permissions ext (worker specific state)
       perm_ext,
     ];
 

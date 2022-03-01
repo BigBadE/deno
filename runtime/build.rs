@@ -69,8 +69,7 @@ mod not_docs {
   fn create_runtime_snapshot(snapshot_path: &Path, files: Vec<PathBuf>) {
     let extensions: Vec<Extension> = vec![
       deno_console::init(),
-      deno_tls::init(),
-      deno_crypto::init(None)
+      deno_tls::init()
     ];
 
     let js_runtime = JsRuntime::new(RuntimeOptions {

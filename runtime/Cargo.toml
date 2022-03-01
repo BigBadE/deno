@@ -24,7 +24,6 @@ path = "examples/hello_runtime.rs"
 [build-dependencies]
 deno_console = { version = "0.38.0", path = "../ext/console" }
 deno_core = { version = "0.120.0", path = "../core" }
-deno_crypto = { version = "0.52.0", path = "../ext/crypto" }
 deno_tls = { version = "0.25.0", path = "../ext/tls" }
 
 lzzzz = '=0.8.0'
@@ -36,7 +35,6 @@ winapi = "0.3.9"
 [dependencies]
 deno_console = { version = "0.38.0", path = "../ext/console" }
 deno_core = { version = "0.120.0", path = "../core" }
-deno_crypto = { version = "0.52.0", path = "../ext/crypto" }
 deno_tls = { version = "0.25.0", path = "../ext/tls" }
 
 atty = "0.2.14"

@@ -95,24 +95,9 @@ impl MainWorker {
     // Internal modules
     let mut extensions: Vec<Extension> = vec![
       // Web APIs
-      deno_webidl::init(),
       deno_console::init(),
-      deno_url::init(),
-      deno_web::init::<Permissions>(
-        options.blob_store.clone(),
-        options.bootstrap.location.clone(),
-      ),
-      deno_crypto::init(options.seed),
-      deno_broadcast_channel::init(options.broadcast_channel.clone(), unstable),
-      deno_webgpu::init(unstable),
-      // ffi
-      deno_ffi::init::<Permissions>(unstable),
       // Runtime ops
       ops::runtime::init(main_module.clone()),
-      ops::worker_host::init(
-        options.create_web_worker_cb.clone(),
-        options.web_worker_preload_module_cb.clone(),
-      ),
       ops::fs_events::init(),
       ops::fs::init(),
       ops::io::init(),

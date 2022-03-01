@@ -2,7 +2,6 @@
 
 pub use deno_console;
 pub use deno_core;
-pub use deno_crypto;
 pub use deno_tls;
 
 pub mod colors;

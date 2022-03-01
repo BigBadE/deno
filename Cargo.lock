@@ -627,6 +627,7 @@ dependencies = [
  "deno_console",
  "deno_core",
  "deno_tls",
+ "deno_url",
  "dlopen",
  "encoding_rs",
  "filetime",
